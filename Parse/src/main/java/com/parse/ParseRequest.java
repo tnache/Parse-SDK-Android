@@ -67,6 +67,7 @@ import bolts.TaskCompletionSource;
       new LinkedBlockingQueue<Runnable>(MAX_QUEUE_SIZE), sThreadFactory);
 
   protected static final int DEFAULT_MAX_RETRIES = 4;
+    /* package */ static int maxNetworkRetries = DEFAULT_MAX_RETRIES;
   /* package */ static final long DEFAULT_INITIAL_RETRY_DELAY = 1000L;
 
   private static long defaultInitialRetryDelay = DEFAULT_INITIAL_RETRY_DELAY;
@@ -78,7 +79,11 @@ import bolts.TaskCompletionSource;
     return defaultInitialRetryDelay;
   }
 
-  private int maxRetries = DEFAULT_MAX_RETRIES;
+    /**
+     * Use maxNetworkRetries as default value for each request.
+     * This allows the value to be configured when Parse is initialized, rather then using a hardcoded value
+     */
+    private int maxRetries = ParseRequest.maxNetworkRetries;
 
   /* package */ ParseHttpRequest.Method method;
   /* package */ String url;

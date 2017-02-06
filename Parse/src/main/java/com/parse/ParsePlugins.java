@@ -65,6 +65,8 @@ import java.io.IOException;
   /* package */ File cacheDir;
   /* package */ File filesDir;
 
+    /* package */ static int socketOperationTimeout = 10 * 1000; //10 seconds
+
   private ParsePlugins(String applicationId, String clientKey) {
     this.applicationId = applicationId;
     this.clientKey = clientKey;
@@ -79,9 +81,8 @@ import java.io.IOException;
   }
 
   /* package */ ParseHttpClient newHttpClient() {
-    int socketOperationTimeout = 10 * 1000; // 10 seconds
     return ParseHttpClient.createClient(
-        socketOperationTimeout,
+            socketOperationTimeout,
         null);
   }
 
@@ -171,7 +172,6 @@ import java.io.IOException;
     @Override
     public ParseHttpClient newHttpClient() {
       SSLSessionCache sslSessionCache = new SSLSessionCache(applicationContext);
-      int socketOperationTimeout = 10 * 1000; // 10 seconds
       return ParseHttpClient.createClient(
           socketOperationTimeout,
           sslSessionCache);

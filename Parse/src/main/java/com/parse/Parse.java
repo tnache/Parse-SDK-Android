@@ -53,7 +53,19 @@ public class Parse {
       private String clientKey;
       private String server = "https://api.parse.com/1/";
       private boolean localDataStoreEnabled;
+        private int socketTimeout = 10 * 1000; //10 seconds
+        private int maxRetries = 4;
       private List<ParseNetworkInterceptor> interceptors;
+
+        public Builder socketTimeout(int socketTimeout) {
+            this.socketTimeout = socketTimeout;
+            return this;
+        }
+
+        public Builder maxRetries(int maxRetries) {
+            this.maxRetries = maxRetries;
+            return this;
+        }
 
       /**
        * Initialize a bulider with a given context.
@@ -210,6 +222,8 @@ public class Parse {
     /* package for tests */ final String server;
     /* package for tests */ final boolean localDataStoreEnabled;
     /* package for tests */ final List<ParseNetworkInterceptor> interceptors;
+      /* package for tests */ final int socketTimeout;
+      /* package for tests */ final int maxRetries;
 
     private Configuration(Builder builder) {
       this.context = builder.context;
@@ -217,6 +231,8 @@ public class Parse {
       this.clientKey = builder.clientKey;
       this.server = builder.server;
       this.localDataStoreEnabled = builder.localDataStoreEnabled;
+        this.socketTimeout = builder.socketTimeout;
+        this.maxRetries = builder.maxRetries;
       this.interceptors = builder.interceptors != null ?
         Collections.unmodifiableList(new ArrayList<>(builder.interceptors)) :
         null;
@@ -381,6 +397,9 @@ public class Parse {
     // NOTE (richardross): We will need this here, as ParsePlugins uses the return value of
     // isLocalDataStoreEnabled() to perform additional behavior.
     isLocalDatastoreEnabled = configuration.localDataStoreEnabled;
+
+      ParsePlugins.socketOperationTimeout = configuration.socketTimeout;
+      ParseRequest.maxNetworkRetries = configuration.maxRetries;
 
     ParsePlugins.Android.initialize(configuration.context, configuration.applicationId, configuration.clientKey);
 
